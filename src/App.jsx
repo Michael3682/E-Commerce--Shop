@@ -1,19 +1,14 @@
-import { useState, useEffect } from 'react'
-import Header from './components/Header'
-import ProductList from './components/ProductList'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import MainPage from './pages/MainPage'
+import Cart from './pages/Cart'
 
 export default function App() {
-    const [products, setProducts] = useState([]);
+    const router = createBrowserRouter([
+        { path: '/', element: <MainPage /> },
+        { path: '/cart', element: <Cart />}
 
-    useEffect(() => {
-        fetch('https://dummyjson.com/products')
-            .then(res => res.json())
-            .then(data => setProducts(data.products))
-    }, [])
+    ])
     return (
-        <>
-            <Header />
-            <ProductList products={products} />
-        </>
+        <RouterProvider router={router} />
     )
 }
