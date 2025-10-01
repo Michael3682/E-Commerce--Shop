@@ -1,6 +1,9 @@
-import { IoStar, IoStarHalf, IoStarOutline } from "react-icons/io5";
+import { IoStar, IoStarHalf, IoStarOutline } from "react-icons/io5"
+import { Link } from "react-router-dom"
+import { useCart } from '../context/CartContext'
 
 export default function ProductCard({ product }) {
+    const { addToCart } = useCart()
     const {
         thumbnail,
         title,
@@ -35,10 +38,10 @@ export default function ProductCard({ product }) {
     }
 
     return (
-        <div className="w-auto flex flex-col items-center bg-[#ffffff] rounded text-black border border-[#24242440] relative">
+        <Link to={`/product/${product.id}`} className="w-auto flex flex-col items-center bg-[#ffffff] rounded text-black border border-[#24242440] relative hover:shadow-lg transition-shadow duration-300">
             <div className="w-[150px]">
                 <img src={thumbnail} alt={title} />
-                <p className="absolute top-0 right-0 bg-red-300 p-1 px-3 text-xs font-medium rounded rounded-tl-none rounded-br-none">-{Math.round(discountPercentage)}%</p>
+                <p className="absolute top-0 right-0 bg-red-100 p-1 px-3 text-xs text-red-800 font-medium rounded rounded-tl-none rounded-br-none">-{Math.round(discountPercentage)}%</p>
             </div>
             <div className="p-3 flex flex-col justify-between gap-3 grow w-full border-t border-black/10">
                 <p className="font-semibold">{title}</p>
@@ -53,9 +56,17 @@ export default function ProductCard({ product }) {
                         <p className="text-sm line-through opacity-50">${price}</p>
                         <p className="text-sm font-medium">${finalPrice}</p>
                     </div>
-                    <button className="bg-[#242424] p-1 px-2 rounded cursor-pointer text-[#ffffff] text-sm">Add to Cart</button>
+                    <button 
+                        className="bg-[#242424] p-1 px-2 rounded cursor-pointer text-[#ffffff] text-sm hover:bg-[#363636]" 
+                        onClick={(e) => {
+                            e.preventDefault()
+                            addToCart(product, 1)
+                        }}
+                    >
+                        Add to Cart
+                    </button>
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }

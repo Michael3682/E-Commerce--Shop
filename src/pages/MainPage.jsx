@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
+import { useSearch } from '../context/SearchContext'
 import Header from '../components/Header'
 import ProductList from '../components/ProductList'
 import ProductFilter from '../components/ProductFilter'
 import Pagination from '../components/Pagination'
 
 export default function MainPage() {
-    const [products, setProducts] = useState([])
     const [categories, setCategories] = useState([])
     const [page, setPage] = useState(1)
+    const { updateProducts, filteredProducts: products } = useSearch()
     const [total, setTotal] = useState(0)
     const [selectedCategory, setSelectedCategory] = useState("")
     const [sort, setSort] = useState("default")
@@ -58,7 +59,7 @@ export default function MainPage() {
 
                 const res = await fetch(`${url}?${params.join("&")}`)
                 const data = await res.json()
-                setProducts(data.products)
+                updateProducts(data.products)
                 setTotal(data.total || (data.products ? data.products.length : 0))
             } catch (e) {
                 console.error(e)
@@ -85,7 +86,7 @@ export default function MainPage() {
     return (
         <>
             <Header />
-            <div className='flex flex-row gap-2 w-full mt-20'>
+            <div className='flex flex-row gap-2 w-full mt-10'>
                 <ProductFilter
                     categories={categories}
                     selectedCategory={selectedCategory}
@@ -93,11 +94,9 @@ export default function MainPage() {
                     sort={sort}
                     setSort={setSort}
                 />
-                <div className='flex flex-col grow'>
-                    <ProductList products={products} />
-                    <Pagination page={page} setPage={setPage} totalPages={totalPages} />
-                </div>
+                <ProductList products={products} />
             </div>
+            <Pagination page={page} setPage={setPage} totalPages={totalPages} />
         </>
     )
 }

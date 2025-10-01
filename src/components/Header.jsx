@@ -1,24 +1,26 @@
 import { Link } from 'react-router-dom'
-import { FaMagnifyingGlass, FaCartShopping } from "react-icons/fa6";
+import { FaCartShopping } from "react-icons/fa6"
+import { useCart } from '../context/CartContext'
+import SearchBar from './SearchBar'
 
-export default function Header({ search, setSearch }) {
+export default function Header() {
+    const { getCartCount } = useCart()
     return (
         <header className="border border-transparent rounded">
             <nav className="flex justify-between">
-                <h1 className="text-4xl font-bold">Cartello</h1>
-                <div className="flex items-center gap-5">
-                    <div className="flex justify-center items-center gap-2 bg-[#ffffff] p-2 px-3 rounded-[50px] border border-[#24242440]">
-                        <input
-                            className="outline-none text-black text-xs text-gray-800"
-                            type="text"
-                            value={search}
-                            onChange={e => setSearch(e.target.value)}
-                            placeholder="Search products..."
-                        />
-                        <FaMagnifyingGlass className="text-gray-800 text-m" />
-                    </div>
-                    <Link to={"/cart"}>
+                <Link to={"/"} className="text-black no-underline">
+                    <h1 className="text-4xl font-bold">Cartello</h1>
+                </Link>
+                <div className="flex items-center gap-10">
+                    <SearchBar />
+                    <Link to={"/"} className='text-lg font-medium'>Browse</Link>
+                    <Link to={"/cart"} className="relative">
                         <FaCartShopping className="text-xl cursor-pointer" />
+                        {getCartCount() > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                {getCartCount()}
+                            </span>
+                        )}
                     </Link>
                 </div>
             </nav>
